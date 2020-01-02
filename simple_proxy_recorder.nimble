@@ -3,6 +3,7 @@ author        = "Celeo"
 description   = "A simple HTTP proxy that saves requests and responses"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["simple_proxy_record"]
+bin           = @["simple_proxy_recorder"]
 
 requires "nim >= 1.0.4"
+requires "docopt >= 0.6.8"

@@ -1,4 +1,4 @@
-# simple_proxy_record
+# simple_proxy_recorder
 
 A simple HTTP proxy that saves requests and responses into HAR files.
 
@@ -7,8 +7,8 @@ A simple HTTP proxy that saves requests and responses into HAR files.
 Uses [Nim](https://nim-lang.org/).
 
 ```sh
-git clone https://github.com/celeo/simple_proxy_record
-cd simple_proxy_record
+git clone https://github.com/celeo/simple_proxy_recorder
+cd simple_proxy_recorder
 nimble build
 ```
 
