@@ -4,10 +4,8 @@
 import asyncdispatch,
   httpclient,
   asynchttpserver,
-  sequtils,
   strutils,
-  strformat,
-  sugar
+  strformat
 import docopt
 
 const cliDoc = """
