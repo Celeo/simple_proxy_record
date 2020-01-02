@@ -1,7 +1,13 @@
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling
 # https://stackoverflow.com/questions/10876883/implementing-an-http-proxy
 
-import asyncdispatch, asynchttpserver, strutils
+import asyncdispatch,
+  httpclient,
+  asynchttpserver,
+  sequtils,
+  strutils,
+  strformat,
+  sugar
 import docopt
 
 const cliDoc = """
@@ -18,14 +24,19 @@ Options:
 """
 
 proc callback(req: Request) {.async.} =
-  echo("Method: " & $req.reqMethod)
-  echo("Url: " & req.url.path)
-  echo("Headers: " & $req.headers)
-  await req.respond(Http200, "Hello world")
+  let client = newAsyncHttpClient()
+  let newUrl = req.url.scheme & "://" & req.headers["host"] & req.url.path
+  echo("Forwarding call to " & newUrl)
+
+  var newHeaders = req.headers
+  newHeaders.table.del("host")
+  let response = await client.request(newUrl, req.reqMethod, body = "", headers = newHeaders)
+
+  await req.respond(response.code(), await response.body, response.headers)
 
 when isMainModule:
   let args = docopt(cliDoc, version = "Simple proxy recorder 0.1.0")
-  echo("Setting up server")
+  let port = ($args["<port>"]).parseInt()
   let server = newAsyncHttpServer()
-  echo("Running ...")
-  waitFor(server.serve(Port(8080), callback))
+  echo(&"Running on port {$port}...")
+  waitFor(server.serve(Port(port), callback))
