@@ -1,6 +1,3 @@
-# https://developer.mozilla.org/en-US/docs/Web/HTTP/Proxy_servers_and_tunneling
-# https://stackoverflow.com/questions/10876883/implementing-an-http-proxy
-
 import asyncdispatch,
   httpclient,
   asynchttpserver,
