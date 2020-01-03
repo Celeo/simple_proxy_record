@@ -7,3 +7,4 @@ bin           = @["simple_proxy_recorder"]
 
 requires "nim >= 1.0.4"
 requires "docopt >= 0.6.8"
+requires "https://github.com/celeo/http_har.git"
