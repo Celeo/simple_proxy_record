@@ -1,9 +1,10 @@
 import asyncdispatch,
-  httpclient,
   asynchttpserver,
+  httpclient,
+  os,
   strutils,
   strformat
-import docopt
+import docopt, http_har
 
 const cliDoc = """
 Simple proxy recorder.
@@ -18,6 +19,16 @@ Options:
   --version   Show version
 """
 
+proc nextFile(): int =
+  var highest = 0
+  for f in walkFiles("*.har"):
+    let name = f.replace(".har", "")
+    try:
+      highest = max(highest, name.parseInt())
+    except:
+      discard
+  highest + 1
+
 proc callback(req: Request) {.async.} =
   let client = newAsyncHttpClient()
   let newUrl = req.url.scheme & "://" & req.headers["host"] & req.url.path
@@ -25,9 +36,14 @@ proc callback(req: Request) {.async.} =
 
   var newHeaders = req.headers
   newHeaders.table.del("host")
-  let response = await client.request(newUrl, req.reqMethod, body = "", headers = newHeaders)
+  let resp = await client.request(newUrl, req.reqMethod, body = "", headers = newHeaders)
 
-  await req.respond(response.code(), await response.body, response.headers)
+  let har = await convertAsync(req, resp)
+  let fname = &"{nextFile()}.har"
+  echo(&"Writing HAR to {fname}")
+  writeFile(fname, har)
+
+  await req.respond(resp.code(), await resp.body, resp.headers)
 
 when isMainModule:
   let args = docopt(cliDoc, version = "Simple proxy recorder 0.1.0")
