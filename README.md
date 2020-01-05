@@ -12,12 +12,24 @@ cd simple_proxy_recorder
 nimble build
 ```
 
-## Running tests
+## Downloading
 
 ```sh
-nimble test
+nimble install "https://github.com/celeo/simple_proxy_recorder.git"
 ```
 
 ## Using
 
-TBD
+```sh
+❯ ./simple_proxy_recorder -h
+Simple proxy recorder.
+
+Usage:
+  simple_proxy_record <port>
+  simple_proxy_record (-h | --help)
+  simple_proxy_record --version
+
+Options:
+  -h --help   Show this screen
+  --version   Show version
+```
